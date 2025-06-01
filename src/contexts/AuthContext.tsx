@@ -26,6 +26,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!supabase) {
+      // If Supabase is not connected, use mock data
+      const mockUser = localStorage.getItem('youthrise_user');
+      if (mockUser) {
+        setUser(JSON.parse(mockUser));
+      }
+      setLoading(false);
+      return;
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
@@ -48,6 +58,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const fetchUserProfile = async (userId: string) => {
+    if (!supabase) return;
+    
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -70,6 +82,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signup = async (userData: { email: string; password: string; name: string; role: 'youth' | 'mentor'; interests: string[] }) => {
     setLoading(true);
     try {
+      if (!supabase) {
+        // Mock signup for when Supabase is not connected
+        const mockUser: Profile = {
+          id: Date.now().toString(),
+          email: userData.email,
+          name: userData.name,
+          role: userData.role,
+          interests: userData.interests,
+          badges: ['welcome'],
+          streak_days: 1,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+        setUser(mockUser);
+        localStorage.setItem('youthrise_user', JSON.stringify(mockUser));
+        toast({
+          title: "Welcome to YouthRise! 🎉",
+          description: "Your account has been created successfully (Demo Mode)",
+        });
+        return;
+      }
+
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: userData.email,
         password: userData.password,
@@ -112,6 +146,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
+      if (!supabase) {
+        // Mock login for when Supabase is not connected
+        const mockUser: Profile = {
+          id: '1',
+          email,
+          name: email.split('@')[0],
+          role: email.includes('mentor') ? 'mentor' : 'youth',
+          interests: ['coding', 'design'],
+          badges: ['welcome', 'first-login'],
+          streak_days: 3,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+        setUser(mockUser);
+        localStorage.setItem('youthrise_user', JSON.stringify(mockUser));
+        toast({
+          title: "Welcome back! 👋",
+          description: "You've successfully logged in (Demo Mode)",
+        });
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -136,7 +192,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    await supabase.auth.signOut();
+    if (supabase) {
+      await supabase.auth.signOut();
+    } else {
+      localStorage.removeItem('youthrise_user');
+    }
     setUser(null);
     toast({
       title: "Logged out",

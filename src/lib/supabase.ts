@@ -4,7 +4,12 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = 'YOUR_SUPABASE_URL'
 const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+// Check if we have valid Supabase credentials
+const hasValidCredentials = supabaseUrl !== 'YOUR_SUPABASE_URL' && supabaseKey !== 'YOUR_SUPABASE_ANON_KEY'
+
+export const supabase = hasValidCredentials 
+  ? createClient(supabaseUrl, supabaseKey)
+  : null
 
 // Database types
 export interface Profile {
