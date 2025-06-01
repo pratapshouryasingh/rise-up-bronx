@@ -1,8 +1,8 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = 'YOUR_SUPABASE_URL'
-const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'
+const supabaseUrl = 'https://pvgxuxqnrevhjqqdizea.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2Z3h1eHFucmV2aGpxcWRpemVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3NjE5NjEsImV4cCI6MjA2NDMzNzk2MX0.ff_3uVpsPWFmOeuZ0YgOmfd1VyE_R05lqZAIkSiV70s'
 
 // Check if we have valid Supabase credentials
 const hasValidCredentials = supabaseUrl !== 'YOUR_SUPABASE_URL' && supabaseKey !== 'YOUR_SUPABASE_ANON_KEY'
