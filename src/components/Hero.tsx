@@ -2,7 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Users, BookOpen, Trophy } from "lucide-react";
 
-const Hero = () => {
+interface HeroProps {
+  onAuthClick: () => void;
+}
+
+const Hero = ({ onAuthClick }: HeroProps) => {
   return (
     <section className="px-6 py-20 lg:px-8">
       <div className="mx-auto max-w-7xl">
@@ -25,7 +29,11 @@ const Hero = () => {
           </p>
           
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+            <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+              onClick={onAuthClick}
+            >
               Get Started
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
